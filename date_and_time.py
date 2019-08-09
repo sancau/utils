@@ -1,6 +1,4 @@
-from datetime import datetime, time
-
-from core.utils.helpers import yield_dates
+from datetime import date, datetime, time, timedelta
 
 
 def get_period(start, end):
@@ -27,6 +25,17 @@ def get_period(start, end):
     end = replace_time(end, time.max)
     
     return start, end
+
+
+def yield_dates(start: date, end: date, as_str=False):
+    """Generates inclusive list of dates between start end end.
+    """
+    days_count = int((end - start).days)
+    for i in range(days_count + 1):
+        dt = start + timedelta(days=i)
+        if as_str:
+            dt = str(dt)
+        yield dt
 
 
 if __name__ == "__main__":
