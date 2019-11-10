@@ -2,6 +2,7 @@ from functools import partial
 from multiprocessing import cpu_count, Pool
 from typing import List, Union
 
+import numpy as np
 import pandas as pd
 
 from django.db.models import QuerySet
