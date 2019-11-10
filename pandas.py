@@ -1,8 +1,30 @@
+from functools import partial
+from multiprocessing import cpu_count, Pool
 from typing import List, Union
 
 import pandas as pd
 
 from django.db.models import QuerySet
+
+
+DEFAULT_WORKERS_COUNT = cpu_count()
+
+
+def _wrapper(frame, job, axis):
+    return frame.apply(job, axis=axis)
+
+
+def multiproccess_apply(df, job, axis=1, workers=DEFAULT_WORKERS_COUNT):
+    """pd.DataFrame.apply wrapper with multiprocessing support.
+    A helpers for cases where a simple "map-reduce" stuff is appropriate.
+    """
+    chunk_size = df.shape[0] // workers
+    chunks = [chunk for _, chunk in df.groupby(np.arange(len(df)) // chunk_size)]
+    if len(chunks) == workers + 1:
+        last = chunks.pop()
+        chunks[-1] = pd.concat([chunks[-1], last])
+    pool = Pool(workers)
+    return pd.concat(pool.map(partial(_wrapper, job=job, axis=axis), chunks))
 
 
 def qs_to_df(
