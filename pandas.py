@@ -14,7 +14,7 @@ def _wrapper(frame, job, axis):
     return frame.apply(job, axis=axis)
 
 
-def multiproccess_apply(df, job, axis=1, workers=DEFAULT_WORKERS_COUNT):
+def multiprocess_apply(df, job, axis=1, workers=DEFAULT_WORKERS_COUNT):
     """pd.DataFrame.apply wrapper with multiprocessing support.
     A helpers for cases where a simple "map-reduce" stuff is appropriate.
     """
